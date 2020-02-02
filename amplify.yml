@@ -14,6 +14,7 @@ frontend:
         - npm ci
     build:
       commands:
+        - ./node_modules/.bin/eslint --fix src
         - quasar build -m pwa
   artifacts:
     # IMPORTANT - Please verify your build output directory
