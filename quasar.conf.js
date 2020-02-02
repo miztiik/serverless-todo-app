@@ -7,12 +7,12 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
-      'axios'
+      'axios', 'amplify', 'appsync'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      'app.sass'
+      'app.styl'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -43,7 +43,13 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
-      components: [],
+      components: [
+        'QInput',
+        'QDate',
+        'QTime',
+        'QPopupProxy',
+        'QCircularProgress'
+      ],
       directives: [],
 
       // Quasar plugins
@@ -60,21 +66,25 @@ module.exports = function (ctx) {
       showProgress: true,
       gzip: false,
       analyze: false,
-      // Options below are automatically set depending on the env, set them if you want to override
-      // preloadChunks: false,
-      // extractCSS: false,
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
-        cfg.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /node_modules/,
-          options: {
-            formatter: require('eslint').CLIEngine.getFormatter('stylish')
+        cfg.module.rules.push(
+          {
+            enforce: 'pre',
+            test: /\.(js|vue)$/,
+            loader: 'eslint-loader',
+            exclude: /node_modules/,
+            options: {
+              formatter: require('eslint').CLIEngine.getFormatter('stylish')
+            }
+          },
+          {
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: 'javascript/auto'
           }
-        })
+        )
       }
     },
 
@@ -142,12 +152,10 @@ module.exports = function (ctx) {
       id: ''
     },
 
-
     // Full list of options: https://quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
     capacitor: {
       hideSplashscreen: true
     },
-
     // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
       bundler: 'packager', // 'packager' or 'builder'

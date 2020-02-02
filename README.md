@@ -51,6 +51,7 @@
     npm install --save graphql
     npm install --save graphql-tag
     npm install --save vue-apollo
+    npm install --save eslint-plugin-vue
     ```
 
 1. ### Install `amplify`
@@ -59,7 +60,7 @@
     npm install -g @aws-amplify/cli
     ```
 
-1. ### Configure `amplify`
+1. ### 🔧 Configure `amplify`
 
     Configure your amplify by running `amplify configure` [Get help here](https://www.youtube.com/watch?v=n4DuYTzpvdE)
 
@@ -204,7 +205,7 @@
 
 ## Deploy Quasar App Scaffolding
 
-1. Deploy App: Continuous Deployment with AWS Ampify
+1. ### Deploy App: Continuous Deployment with AWS Ampify
 
     If you haven’t created a new repository and added your project to it yet, now would be a good time to do so. We will connect this `repo` to `AWS Amplify`.
 
@@ -220,14 +221,14 @@
 
     We will also configure `amplify build` steps to use `quasar` commands and publish as `pwa`
 
-1. Login to AWS Console
+1. ### Login to AWS Console
 
     - Navigate to [AWS Amplify Console](https://console.aws.amazon.com/amplify/home)
     - Authorize `Amplify` to access your `github` account & select the repo and branch
         ![miztiik_amplify_console_connec_to_repo](images/miztiik_amplify_console_connec_to_repo_00.png)
     - Choose `dev` for environment (_Unless you used a different name for env name, during `amplify init`_)
     - Choose ‘amplifyconsole-backend-role’ for role
-    - Update the `build` settings to reflect these, or copy the `amplify.yaml` to the root directory of your app
+    - Update the `build` settings to reflect these, or copy the `amplify.yaml`(file can be found in git repo) to the root directory of your app
 
         ```yaml
         version: 0.1
@@ -271,7 +272,7 @@
     quasar new boot appsync
     ```
 
-1. ### Configure `quasar amplify` plugin by
+1. ### Configure `quasar amplify` plugin
 
     Replace the code in `src/boot/amplify.js` with the following, This gives us `this.$Amplify` and `this.$AmplifyEventBus` on the global Vue instance, accessible by our components. There is also a route guard that protects all routes except `/auth` .
 
@@ -311,64 +312,7 @@
         next()
     })
     }
-    ```
 
-1. ### Configure `quasar routes`
-
-    We will create routes for the following,
-    - Auth
-    - Todo
-    - Profile
-    - Error404
-
-    Modify `src/router/routes.js`
-
-    ```javascript
-    const routes = [{
-    path: '/',
-    component: () => import('layouts/MyLayout.vue'),
-    children: [{
-        path: '',
-        name: 'todo',
-        component: () => import('pages/Todo.vue'),
-        meta: {
-        requiresAuth: true
-        }
-    }]
-    },
-    {
-    path: '/auth',
-    component: () => import('layouts/MyLayout.vue'),
-    children: [{
-        path: '',
-        name: 'auth',
-        component: () => import('pages/Auth.vue'),
-        meta: {
-        requiresAuth: false
-        }
-    }]
-    },
-    {
-    path: '/profile',
-    component: () => import('layouts/MyLayout.vue'),
-    children: [{
-        name: 'profile',
-        path: '',
-        component: () => import('pages/Profile.vue'),
-        meta: {
-        requiresAuth: true
-        }
-    }]
-    }
-    ]
-    // Always leave this as last one
-    if (process.env.MODE !== 'ssr') {
-    routes.push({
-        path: '*',
-        component: () => import('pages/Error404.vue')
-    })
-    }
-    export default routes
     ```
 
 1. ### Update `quasar.conf.js`
@@ -441,6 +385,7 @@
         Vue.use(VueApollo)
         app.apolloProvider = appsyncProvider
         }
+
         ```
 
 1. ### Add `quasar pages`
@@ -544,6 +489,7 @@
         margin: 0 10px;
         }
         </style>
+
         ```
 
     - Let’s add our Auth code, Copy the code below to the `src/pages/SignIn.vue` file(replace the existing text):
@@ -602,6 +548,7 @@
         width: 460px;
         }
         </style>
+
         ```
 
     - Let’s add our Auth code, Copy the code below to the `src/pages/SignUp.vue` file(replace the existing text):
@@ -688,6 +635,7 @@
         width: 460px;
         }
         </style>
+
         ```
 
     - Let’s add our Auth code, Copy the code below to the `src/pages/Profile.vue` file(replace the existing text):
@@ -721,6 +669,7 @@
         </script>
         <style>
         </style>
+
         ```
 
     - Let’s add our Auth code, Copy the code below to the `src/layouts/MyLayout.vue` file(replace the existing text):
@@ -847,10 +796,11 @@
 
         <style>
         </style>
+
         ```
 
     - Update `App.vue`
-        We need to update App.vue to add our Amplify authentication router guard and we tell Vue not to render our components until the client has been _rehydrated_
+        We need to update `App.vue` to add our Amplify authentication router guard and we tell Vue not to render our components until the client has been _rehydrated_
 
         ```vue
         <template>
@@ -895,9 +845,10 @@
 
         <style>
         </style>
+
         ```
 
-    - Add Global CSS stylings
+    - Add Global CSS stylings `src/css/app.styl`
         We will place our global CSS definitions in `src/css/app.styl`:
 
         ```css
@@ -911,9 +862,9 @@
         }
         ```
 
-    - Finally,Update `App.vue`
+    - Finally,Update `src/pages/Todo.vue`
 
-        We will complete our example ToDo application by adding the following code to `pages/Todo.vue`:
+        We will complete our example ToDo application by adding the following code to `src/pages/Todo.vue`:
 
         ```vue
         <template>
@@ -1181,9 +1132,69 @@
         margin: 0 10px;
         }
         </style>
+
         ```
 
-## Pushing to Production
+1. ### Configure `quasar routes`
+
+    We will create routes for the following,
+    - Auth
+    - Todo
+    - Profile
+    - Error404
+
+    Modify `src/router/routes.js`
+
+    ```javascript
+    const routes = [{
+    path: '/',
+    component: () => import('layouts/MyLayout.vue'),
+    children: [{
+        path: '',
+        name: 'todo',
+        component: () => import('pages/Todo.vue'),
+        meta: {
+        requiresAuth: true
+        }
+    }]
+    },
+    {
+    path: '/auth',
+    component: () => import('layouts/MyLayout.vue'),
+    children: [{
+        path: '',
+        name: 'auth',
+        component: () => import('pages/Auth.vue'),
+        meta: {
+        requiresAuth: false
+        }
+    }]
+    },
+    {
+    path: '/profile',
+    component: () => import('layouts/MyLayout.vue'),
+    children: [{
+        name: 'profile',
+        path: '',
+        component: () => import('pages/Profile.vue'),
+        meta: {
+        requiresAuth: true
+        }
+    }]
+    }
+    ]
+    // Always leave this as last one
+    if (process.env.MODE !== 'ssr') {
+    routes.push({
+        path: '*',
+        component: () => import('pages/Error404.vue')
+    })
+    }
+    export default routes
+
+    ```
+
+## 🎯Pushing to Production
 
 Every time you make commit to your git repository, the Continuous Deployment we setup within the AWS Amplify console will build and deploy your site.
 
@@ -1191,7 +1202,17 @@ Wait for the build to complete and navigate to your app url,
 
 ![miztiik_serverless_todo_app_00](images/miztiik_serverless_todo_app_00.png)
 
-#### References
+### 🔍Gotchas
+
+1. `aws-exports.js` indentation error
+
+    ⚙️ Try this: `./node_modules/.bin/eslint --fix src`
+
+1. `graphql` compilation error
+
+    ⚙️ Try this: [Github - Compile error with webpack 4 #1272](https://github.com/graphql/graphql-js/issues/1272)
+
+#### 📖 References
 
 1. [Project Source](https://medium.com/quasar-framework/creating-a-quasar-framework-application-with-aws-amplify-services-part-1-4-9a795f38e16d)
 
