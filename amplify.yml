@@ -1,0 +1,25 @@
+version: 0.1
+backend:
+  phases:
+    # IMPORTANT - Please verify your build commands
+    build:
+      commands:
+        - '# Execute Amplify CLI with the helper script'
+        - amplifyPush --simple
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install -g @quasar/cli
+        - npm ci
+    build:
+      commands:
+        - quasar build -m pwa
+  artifacts:
+    # IMPORTANT - Please verify your build output directory
+    baseDirectory: /dist/pwa
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
