@@ -1136,6 +1136,7 @@
         ```
 
 1. ### Configure `quasar routes`
+1. ### <summary>Configure `quasar routes`</summary>
 
     We will create routes for the following,
     - Auth
@@ -1194,7 +1195,7 @@
 
     ```
 
-## 🎯Pushing to Production
+## 🎯Pushing to Production🎁🎉🏁
 
 Every time you make commit to your git repository, the Continuous Deployment we setup within the AWS Amplify console will build and deploy your site.
 
