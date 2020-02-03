@@ -1136,7 +1136,6 @@
         ```
 
 1. ### Configure `quasar routes`
-<summary>1. ### Configure `quasar routes`</summary>
 
     We will create routes for the following,
     - Auth
